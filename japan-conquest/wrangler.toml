@@ -15,7 +15,7 @@ fallthrough = true
 [[d1_databases]]
 binding = "DB"                         # コード内で env.DB として使う
 database_name = "japan-conquest-db"
-database_id = "ここにD1のIDを入れる"      # D1 の画面に出ている ID
+database_id = "97c63782-b77f-41b0-81c3-90f2c03f99a6"      # D1 の画面に出ている ID
 
 # ログイン用の秘密の文字列 JWT_SECRET はここには書かず、
 # Worker →「設定」→「変数とシークレット」で「シークレット」として追加します。
