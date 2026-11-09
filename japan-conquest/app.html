@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seiha Stamp Passport</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Conquer Japan one stamp at a time. Mark the places you've been on a blank map and collect food and activity stamps in every prefecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+2:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: 1カラム。ヘッダー → (ホーム) 集計＋白地図＋地方別 / (県) 都市ごとのスタンプ / (スタンプ帳) / (アカウント)
+   駅スタンプ帳がモチーフ：パスポート紙のような冷たい白、食＝朱、アクティビティ＝藍のインク */
+:root {
+  --paper: #f2f3ef;
+  --panel: #ffffff;
+  --ink: #1c2230;
+  --muted: #5b6370;
+  --rule: #d6d9d2;
+  --sea: #dfe7ea;
+  --land: #ffffff;
+  --coast: #8a94a1;
+  --food: #c13a22;
+  --act: #2a58a3;
+  --visit: #f1c6bb;
+  --conq: #c13a22;
+  --gold: #a87b1f;
+  --f-display: "Dela Gothic One", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --f-body: "M PLUS 2", "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+  --f-num: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+/* 白地図が主役なので、端末がダークモードでも常に明るい配色で表示する */
+:root, :root[data-theme="dark"] { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.7; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: 1.25; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+
+/* ヘッダー */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.top .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.logo { display: flex; align-items: baseline; gap: 8px; text-decoration: none; margin-right: auto; }
+.logo b { font-family: var(--f-display); font-weight: 400; font-size: 1.25rem; letter-spacing: .04em; }
+.logo span { font-size: .72rem; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+.nav { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.nav a, .nav button { text-decoration: none; font-size: .88rem; padding: 4px 10px; border-radius: 999px; border: 1px solid transparent; background: none; cursor: pointer; color: var(--muted); }
+.nav a[aria-current="page"] { color: var(--ink); border-color: var(--rule); background: var(--panel); }
+.nav .lang { border-color: var(--rule); font-family: var(--f-num); font-size: .78rem; }
+.chip-demo { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); border-radius: 3px; padding: 0 6px; }
+
+/* ホーム：集計 */
+.hero { padding-block: 32px 8px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 32px; align-items: end; }
+.hero h1 { font-size: clamp(1.9rem, 5.2vw, 3.1rem); }
+.hero h1 em { font-style: normal; color: var(--conq); }
+.hero p { margin: 10px 0 0; color: var(--muted); max-width: 36em; }
+.tally { display: grid; grid-template-columns: repeat(3, auto); gap: 4px 22px; text-align: right; }
+.tally .big { font-family: var(--f-num); font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; line-height: 1; }
+.tally .big small { font-size: .45em; color: var(--muted); font-weight: 500; }
+.tally .lbl { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.bars { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+.bar { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font-size: .82rem; }
+.bar i { display: block; height: 8px; background: var(--rule); border-radius: 4px; overflow: hidden; }
+.bar i span { display: block; height: 100%; width: 0; border-radius: 4px; transition: width .5s ease; }
+.bar.food i span { background: var(--food); } .bar.act i span { background: var(--act); }
+.bar .tag { font-weight: 700; } .bar.food .tag { color: var(--food); } .bar.act .tag { color: var(--act); }
+@media (max-width: 640px) {
+  .hero { grid-template-columns: 1fr; }
+  .tally { text-align: left; }
+  .bars { grid-template-columns: 1fr; }
+}
+
+.notice { margin-top: 18px; padding: 10px 14px; border: 1px dashed var(--rule); border-radius: 6px; font-size: .86rem; color: var(--muted); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.notice a { color: var(--act); font-weight: 700; }
+
+/* 白地図 */
+.section { padding-block: 24px; }
+.section > h2, .sec-head h2 { font-size: 1.3rem; }
+.sec-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.legend { display: flex; gap: 14px; font-size: .8rem; color: var(--muted); flex-wrap: wrap; align-items: center; }
+.legend i { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--coast); vertical-align: -1px; margin-right: 5px; background: var(--land); border-radius: 2px; }
+.legend i.v { background: var(--visit); } .legend i.c { background: var(--conq); border-color: var(--conq); }
+.btn-ghost { background: var(--panel); border: 1px solid var(--rule); border-radius: 999px; padding: 3px 12px; cursor: pointer; font-size: .8rem; }
+.stage { --head-h: 56px; height: calc(100vh - var(--head-h) - env(safe-area-inset-top, 0px)); height: calc(100svh - var(--head-h) - env(safe-area-inset-top, 0px)); min-height: 420px; max-height: 920px; display: flex; flex-direction: column; background: var(--sea); border-bottom: 1px solid var(--rule); }
+.map-scroll { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+.map-box { position: absolute; inset: 0; }
+.map-status { padding: 80px 16px; text-align: center; color: var(--muted); }
+.jmap { display: block; width: 100%; height: 100%; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+.jmap.is-drag { cursor: grabbing; }
+.ov-count { position: absolute; top: 10px; left: max(12px, env(safe-area-inset-left, 0px)); background: var(--panel); border: 1px solid var(--rule); border-radius: 999px; padding: 4px 12px; font-size: .8rem; pointer-events: none; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
+.ov-count b { font-family: var(--f-num); font-size: 1rem; color: var(--conq); }
+.zoom-btns { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); top: 10px; display: grid; gap: 6px; }
+.zoom-btns button { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--rule); background: var(--panel); font-family: var(--f-num); font-size: 1.15rem; line-height: 1; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
+.stage-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-block: 8px; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); background: var(--paper); border-top: 1px solid var(--rule); font-size: .78rem; color: var(--muted); }
+.stage-bar a { color: var(--muted); text-decoration: none; white-space: nowrap; }
+.jmap-pref { fill: var(--land); stroke: var(--coast); stroke-width: .7; stroke-linejoin: round; cursor: pointer; transition: fill .3s; }
+.jmap-pref.is-visited { fill: var(--visit); }
+.jmap-pref.is-conq { fill: var(--conq); }
+.jmap-pref { vector-effect: non-scaling-stroke; }
+.jmap-pref:hover, .jmap-pref:focus-visible { stroke: var(--ink); stroke-width: 1.6; outline: none; }
+.jmap-inset { fill: none; stroke: var(--coast); stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; }
+@media (max-width: 560px) {
+  .logo span { display: none; }
+  .chip-demo { display: none; }
+  .nav a, .nav button { padding: 3px 8px; font-size: .82rem; }
+  .top .wrap { flex-wrap: nowrap; }
+}
+.map-tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--paper); font-size: .78rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; transform: translate(-50%, -130%); }
+
+/* 地方別 */
+.regions { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+.region { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; min-width: 0; }
+.region h3 { font-size: 1rem; display: flex; justify-content: space-between; gap: 8px; }
+.region h3 .num { font-family: var(--f-num); font-size: .8rem; color: var(--muted); }
+.prefs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pchip { text-decoration: none; font-size: .82rem; border: 1px solid var(--rule); border-radius: 999px; padding: 2px 10px; display: inline-flex; gap: 6px; align-items: baseline; background: var(--paper); }
+.pchip .num { font-size: .72rem; color: var(--muted); }
+.pchip.is-visited { background: var(--visit); border-color: transparent; }
+.pchip.is-conq { background: var(--conq); color: #fff; border-color: transparent; }
+.pchip.is-conq .num { color: #fff; opacity: .85; }
+
+/* 県ページ */
+.crumb { padding-top: 22px; font-size: .85rem; color: var(--muted); }
+.crumb a { text-decoration: none; }
+.pref-head { padding-block: 8px 4px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: end; }
+.pref-head h1 { font-size: clamp(2rem, 6vw, 3.2rem); }
+.pref-head h1 small { font-family: var(--f-body); font-size: .4em; color: var(--muted); margin-left: 10px; font-weight: 500; }
+.seal { font-family: var(--f-display); color: var(--conq); border: 3px double var(--conq); border-radius: 6px; padding: 4px 10px; transform: rotate(-6deg); font-size: 1rem; white-space: nowrap; }
+.cities { display: grid; gap: 18px; padding-block: 18px 40px; }
+.city { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 16px; min-width: 0; }
+.city-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.city-head h2 { font-size: 1.15rem; }
+.city-head h2 small { font-family: var(--f-body); font-size: .75em; color: var(--muted); margin-left: 6px; }
+.group-head { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 10px; }
+.group-head h2 { font-size: 1.15rem; }
+.group-head.food h2 { color: var(--food); } .group-head.activity h2 { color: var(--act); }
+.exp .city-tag { display: inline-block; font-size: .72rem; color: var(--muted); border: 1px solid var(--rule); border-radius: 999px; padding: 0 8px; margin-bottom: 4px; }
+.exps { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.exp { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: center; text-align: left; background: none; border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; cursor: pointer; }
+.exp:hover { border-color: var(--muted); }
+.exp.food { --ink-c: var(--food); } .exp.activity { --ink-c: var(--act); }
+.exp h3 { font-family: var(--f-body); font-weight: 700; font-size: .98rem; line-height: 1.35; }
+.exp h3 small { display: block; font-weight: 400; font-size: .8rem; color: var(--muted); }
+.exp p { margin: 4px 0 0; font-size: .82rem; color: var(--muted); line-height: 1.5; }
+.exp .act-line { margin-top: 6px; font-size: .76rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-c); }
+
+/* スタンプ（駅スタンプ風の丸印） */
+.stamp { --tilt: -8deg; width: 84px; aspect-ratio: 1; border-radius: 50%; display: grid; grid-template-rows: auto 1fr auto; place-items: center; padding: 10px 6px 8px; border: 2px dashed var(--rule); color: var(--muted); line-height: 1; user-select: none; }
+.stamp .t { font-size: .55rem; letter-spacing: .14em; font-weight: 700; }
+.stamp .k { font-family: var(--f-display); font-size: 1.7rem; opacity: .35; }
+.stamp .d { font-family: var(--f-num); font-size: .5rem; letter-spacing: .02em; }
+.is-on .stamp { border: 3px solid var(--ink-c); color: var(--ink-c); box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4.5px var(--ink-c); transform: rotate(var(--tilt)); }
+.is-on .stamp .k { opacity: 1; }
+.exp.is-on { border-color: color-mix(in srgb, var(--ink-c) 40%, var(--rule)); }
+.just .stamp { animation: thump .45s cubic-bezier(.2, .9, .3, 1.2); }
+@keyframes thump { 0% { transform: scale(1.5) rotate(var(--tilt)); opacity: 0; } 60% { transform: scale(.94) rotate(var(--tilt)); opacity: 1; } 100% { transform: scale(1) rotate(var(--tilt)); } }
+
+/* スタンプ帳 */
+.book { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 22px 14px; padding-block: 18px 40px; }
+.book .item { display: grid; justify-items: center; gap: 6px; text-align: center; text-decoration: none; }
+.book .item.food { --ink-c: var(--food); } .book .item.activity { --ink-c: var(--act); }
+.book .stamp { width: 96px; }
+.book .item:nth-child(3n) .stamp { --tilt: 5deg; } .book .item:nth-child(3n+1) .stamp { --tilt: -4deg; }
+.book .name { font-size: .82rem; font-weight: 700; line-height: 1.35; }
+.book .where { font-size: .72rem; color: var(--muted); }
+.empty { padding: 48px 0; text-align: center; color: var(--muted); }
+.empty a { color: var(--act); font-weight: 700; }
+.seals { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.seals .seal { font-size: .85rem; text-decoration: none; }
+
+/* アカウント */
+.forms { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding-block: 18px 40px; }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; min-width: 0; }
+.card h2 { font-size: 1.1rem; margin-bottom: 10px; }
+.card label { display: block; font-size: .82rem; color: var(--muted); margin-top: 10px; }
+.card input { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.btn { margin-top: 14px; background: var(--ink); color: var(--paper); border: 0; border-radius: 999px; padding: 8px 18px; cursor: pointer; font-weight: 700; }
+.err { color: var(--food); font-size: .82rem; min-height: 1.2em; margin: 8px 0 0; }
+
+/* トースト */
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 8px 16px; border-radius: 999px; font-size: .88rem; box-shadow: 0 6px 18px rgba(0, 0, 0, .18); z-index: 20; max-width: calc(100% - 32px); }
+.toast.big { font-family: var(--f-display); font-size: 1.05rem; background: var(--conq); color: #fff; }
+footer { border-top: 1px solid var(--rule); padding-block: 18px 28px; font-size: .78rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .just .stamp { animation: none; } .bar i span, .jmap-pref { transition: none; } }
+</style>
+</head>
+<body>
+<!--JAPAN_MAP-->
+<!--DEMO_CATALOG-->
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#home"><b>SEIHA</b><span id="tagline">Japan stamp passport</span></a>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</header>
+<main id="view"><div class="wrap"><p class="map-status">Loading…</p></div></main>
+<footer><div class="wrap" id="foot"></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, el) { return (el || document).querySelector(s); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var LS = {
+    get: function (k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+    del: function (k) { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+  var KEY_PROGRESS = "seiha.progress.v1", KEY_LANG = "seiha.lang";
+
+  /* ---------- 文言（英語が基本・日本語切替） ---------- */
+  var T = {
+    en: {
+      tagline: "Japan stamp passport", map: "Map", passport: "Passport", account: "Account", login: "Log in",
+      heroA: "Conquer Japan,", heroB: "one stamp at a time.",
+      heroP: "Every prefecture has 10 stamps: 5 local foods and 5 activities. One stamp turns it light red on the map. Collect all 10 to conquer it in deep red.",
+      prefs: "Prefectures", stamps: "Stamps", conquered: "Conquered",
+      food: "Food", activity: "Activity", foodK: "食", actK: "遊",
+      blank: "Blank map", legendNone: "0", legendVisited: "1–9 stamps", legendConq: "10/10 conquered", fit: "Show all of Japan", more: "Scroll for your stats ↓", prefsShort: "prefectures",
+      tapHint: "Tap a prefecture to open its 10 stamps. Pinch or use + − to zoom.", byRegion: "By region",
+      guestNote: "Your stamps are saved in this browser only.", guestCta: "Create a free account to keep them on any device",
+      demoNote: "Demo: stamps are saved in this browser. Accounts work on the deployed site.",
+      back: "All of Japan",
+      stampIt: "Tap to stamp", stamped: "Stamped", removed: "Stamp removed", conqueredT: "conquered!",
+      bookTitle: "My stamp passport", bookEmpty: "No stamps yet.", bookGo: "Open the map and pick a prefecture",
+      sealsTitle: "Conquered prefectures", stampsOf: "stamps",
+      signup: "Create account", signupBtn: "Sign up", loginBtn: "Log in", user: "Username", pass: "Password (8+ characters)",
+      userHint: "3–20 letters, numbers or _", loggedAs: "Logged in as", logout: "Log out", synced: "Your guest stamps were added to your account.",
+      demoAcc: "This is a demo page, so accounts are turned off. When the site runs on Cloudflare, travelers can sign up here and their stamps are saved to the database.",
+      saveFail: "Couldn't save. Check your connection and try again.", foot: "Check opening hours and prices on official sites before you go.",
+      mapFail: "The map couldn't load. You can still use the list below."
+    },
+    ja: {
+      tagline: "日本制覇スタンプ帳", map: "地図", passport: "スタンプ帳", account: "アカウント", login: "ログイン",
+      heroA: "日本を、", heroB: "スタンプで制覇しよう。",
+      heroP: "各都道府県にスタンプは10個：グルメ5つと体験5つ。1つ押すと白地図が薄い赤に、10個そろえば濃い赤で「制覇」です。",
+      prefs: "都道府県", stamps: "スタンプ", conquered: "制覇",
+      food: "グルメ", activity: "体験", foodK: "食", actK: "遊",
+      blank: "白地図", legendNone: "0個", legendVisited: "1〜9個", legendConq: "10個で制覇", fit: "日本全体を表示", more: "下にスクロールで集計 ↓", prefsShort: "都道府県",
+      tapHint: "県をタップすると10個のスタンプが開きます。ピンチや＋−で拡大できます。", byRegion: "地方別",
+      guestNote: "スタンプはこのブラウザにだけ保存されています。", guestCta: "無料登録するとどの端末でも見られます",
+      demoNote: "デモ版：スタンプはこのブラウザに保存されます。アカウント機能は公開サイトで使えます。",
+      back: "日本全体",
+      stampIt: "タップでスタンプ", stamped: "スタンプ済み", removed: "スタンプを取り消しました", conqueredT: "制覇！",
+      bookTitle: "わたしのスタンプ帳", bookEmpty: "まだスタンプがありません。", bookGo: "地図から県を選ぶ",
+      sealsTitle: "制覇した都道府県", stampsOf: "スタンプ",
+      signup: "新規登録", signupBtn: "登録する", loginBtn: "ログイン", user: "ユーザー名", pass: "パスワード（8文字以上）",
+      userHint: "英数字と _ で3〜20文字", loggedAs: "ログイン中：", logout: "ログアウト", synced: "ゲスト中のスタンプをアカウントに移しました。",
+      demoAcc: "このページはデモなのでアカウント機能はオフです。Cloudflare で公開すると、ここで旅行者が登録でき、スタンプがデータベースに保存されます。",
+      saveFail: "保存できませんでした。通信状況を確認してもう一度お試しください。", foot: "営業時間・料金はお出かけ前に公式サイトでご確認ください。",
+      mapFail: "地図を読み込めませんでした。下の一覧からも選べます。"
+    }
+  };
+  var lang = LS.get(KEY_LANG, null) || (/^ja\b/i.test(navigator.language || "") ? "ja" : "en");
+  var t = function (k) { return T[lang][k] || T.en[k] || k; };
+  var nm = function (o) { return lang === "ja" ? o.ja : o.en; };
+  var sub = function (o) { return lang === "ja" ? o.en : o.ja; };
+
+  /* ---------- 状態 ---------- */
+  var S = { mode: "guest", user: null, idx: null, visits: {}, stamps: {} };
+
+  function buildIndex(cat) {
+    var idx = { regions: [], prefs: {}, prefBySlug: {}, cities: {}, exps: {}, total: 0, totalFood: 0, totalAct: 0 };
+    cat.prefectures.forEach(function (p) { var o = Object.assign({ cities: [], exps: [] }, p); idx.prefs[p.id] = o; idx.prefBySlug[p.slug] = o; });
+    cat.regions.forEach(function (r) { idx.regions.push(Object.assign({ prefs: cat.prefectures.filter(function (p) { return p.region === r.id; }).map(function (p) { return idx.prefs[p.id]; }) }, r)); });
+    cat.cities.forEach(function (c) { var o = Object.assign({ exps: [] }, c); idx.cities[c.id] = o; idx.prefs[c.pref].cities.push(o); });
+    cat.experiences.forEach(function (e) {
+      var city = idx.cities[e.city]; if (!city) return;
+      idx.exps[e.id] = e; city.exps.push(e); idx.prefs[city.pref].exps.push(e);
+      idx.total++; if (e.cat === "food") idx.totalFood++; else idx.totalAct++;
+    });
+    return idx;
+  }
+
+  function prefState(p) {
+    var got = p.exps.filter(function (e) { return S.stamps[e.id]; }).length;
+    var visited = got > 0; // 1個押したら薄い赤
+    var conq = p.exps.length > 0 && got === p.exps.length;
+    return { got: got, total: p.exps.length, visited: visited, conq: conq, cls: conq ? "is-conq" : visited ? "is-visited" : "" };
+  }
+  function totals() {
+    var r = { prefs: 0, conq: 0, stamps: 0, food: 0, act: 0 };
+    Object.keys(S.idx.prefs).forEach(function (id) { var s = prefState(S.idx.prefs[id]); if (s.visited) r.prefs++; if (s.conq) r.conq++; });
+    Object.keys(S.stamps).forEach(function (id) { var e = S.idx.exps[id]; if (!e) return; r.stamps++; if (e.cat === "food") r.food++; else r.act++; });
+    return r;
+  }
+
+  /* ---------- 保存（ゲスト=ブラウザ / ログイン=API） ---------- */
+  function saveLocal() { if (S.mode !== "user") LS.set(KEY_PROGRESS, { visits: S.visits, stamps: S.stamps }); }
+  function api(method, path, body) {
+    return fetch(path, { method: method, credentials: "same-origin", headers: body ? { "Content-Type": "application/json" } : {}, body: body ? JSON.stringify(body) : undefined })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok) { var e = new Error(d.error || ("HTTP " + r.status)); e.status = r.status; throw e; } return d; }); });
+  }
+  function fromRows(p) {
+    var v = {}, s = {};
+    (p.visits || []).forEach(function (x) { v[x.city] = x.at; });
+    (p.stamps || []).forEach(function (x) { s[x.exp] = x.at; });
+    S.visits = v; S.stamps = s;
+  }
+  var nowStr = function () { return new Date().toISOString().slice(0, 19).replace("T", " "); };
+  function fmtDate(at) { if (!at) return ""; var d = String(at).slice(0, 10).split("-"); return d.length === 3 ? d[0] + "." + d[1] + "." + d[2] : ""; }
+
+  /* ---------- トースト ---------- */
+  var toastTimer;
+  function toast(msg, big) {
+    var el = $("#toast"); el.textContent = msg; el.className = "toast" + (big ? " big" : ""); el.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.hidden = true; }, big ? 2600 : 1800);
+  }
+
+  /* ---------- 操作 ---------- */
+  var justStamped = null;
+  function toggleStamp(id) {
+    var e = S.idx.exps[id]; if (!e) return;
+    var city = S.idx.cities[e.city], pref = S.idx.prefs[city.pref];
+    var before = prefState(pref), on = !S.stamps[id];
+    var prev = { visit: S.visits[city.id], stamp: S.stamps[id] };
+    if (on) { S.stamps[id] = nowStr(); if (!S.visits[city.id]) S.visits[city.id] = S.stamps[id]; justStamped = id; }
+    else delete S.stamps[id];
+    saveLocal(); render();
+    var after = prefState(pref);
+    if (on && after.conq && !before.conq) toast(nm(pref) + " " + t("conqueredT"), true);
+    else toast(on ? t("stamped") + ": " + nm(e) : t("removed"));
+    if (S.mode === "user") {
+      api(on ? "PUT" : "DELETE", "/api/stamps/" + encodeURIComponent(id)).catch(function () {
+        if (prev.stamp) S.stamps[id] = prev.stamp; else delete S.stamps[id];
+        if (prev.visit) S.visits[city.id] = prev.visit; else if (on) delete S.visits[city.id];
+        render(); toast(t("saveFail"));
+      });
+    }
+  }
+  /* ---------- 白地図（amCharts の公開地図データ → SVG） ---------- */
+  var JMap = (function () {
+    var SOURCES = [
+      "https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5.1.4/japanLow.js",
+      "https://unpkg.com/@amcharts/amcharts5-geodata@5.1.4/japanLow.js"
+    ];
+    var EN = ["hokkaido","aomori","iwate","miyagi","akita","yamagata","fukushima","ibaraki","tochigi","gunma","saitama","chiba","tokyo","kanagawa","niigata","toyama","ishikawa","fukui","yamanashi","nagano","gifu","shizuoka","aichi","mie","shiga","kyoto","osaka","hyogo","nara","wakayama","tottori","shimane","okayama","hiroshima","yamaguchi","tokushima","kagawa","ehime","kochi","fukuoka","saga","nagasaki","kumamoto","oita","miyazaki","kagoshima","okinawa"];
+    var geoP = null, el = null, paths = {}, tip = null;
+    function loadGeo() {
+      if (geoP) return geoP;
+      geoP = (async function () {
+        for (var i = 0; i < SOURCES.length; i++) {
+          try { var m = await import(SOURCES[i]); var d = m.default || m; if (d && d.features) return d; } catch (e) {}
+        }
+        throw new Error("map");
+      })();
+      return geoP;
+    }
+    function codeOf(f) {
+      var p = f.properties || {}, id = String(p.id || f.id || ""), m = id.match(/JP-?(\d{1,2})/i);
+      if (m) return +m[1];
+      var n = String(p.name || "").toLowerCase().replace(/[^a-z]/g, ""), i = EN.findIndex(function (e) { return n.indexOf(e) === 0; });
+      return i >= 0 ? i + 1 : 0;
+    }
+    function polys(g) { return g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : []; }
+    function merc(c) { return [c[0], -Math.log(Math.tan(Math.PI / 4 + c[1] * Math.PI / 360)) * 180 / Math.PI]; }
+    function bbox(list) {
+      var b = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity };
+      list.forEach(function (it) { it.ps.forEach(function (p) { p.forEach(function (r) { r.forEach(function (c) {
+        var xy = merc(c); b.x0 = Math.min(b.x0, xy[0]); b.x1 = Math.max(b.x1, xy[0]); b.y0 = Math.min(b.y0, xy[1]); b.y1 = Math.max(b.y1, xy[1]);
+      }); }); }); });
+      return b;
+    }
+    function build(geo) {
+      var W = 1000, H = 1000, pad = 20, items = [];
+      geo.features.forEach(function (f) {
+        var code = codeOf(f); if (!code) return;
+        var ps = polys(f.geometry);
+        if (code === 13) ps = ps.filter(function (p) { return p[0].some(function (c) { return c[1] > 32; }); }); // 東京の離島を除く
+        items.push({ code: code, ps: ps });
+      });
+      var main = items.filter(function (i) { return i.code !== 47; }), oki = items.filter(function (i) { return i.code === 47; });
+      var b = bbox(main), s = Math.min((W - pad * 2) / (b.x1 - b.x0), (H - pad * 2) / (b.y1 - b.y0));
+      var ox = W - pad - (b.x1 - b.x0) * s, oy = pad + (H - pad * 2 - (b.y1 - b.y0) * s) / 2;
+      var fMain = function (c) { var xy = merc(c); return [ox + (xy[0] - b.x0) * s, oy + (xy[1] - b.y0) * s]; };
+      var fOki = null, box = null;
+      if (oki.length) {
+        var ob = bbox(oki), bw = 230, bh = 200, bx = pad, by = pad + 40;
+        var os = Math.min((bw - 24) / (ob.x1 - ob.x0), (bh - 24) / (ob.y1 - ob.y0), s);
+        var ix = bx + (bw - (ob.x1 - ob.x0) * os) / 2, iy = by + (bh - (ob.y1 - ob.y0) * os) / 2;
+        fOki = function (c) { var xy = merc(c); return [ix + (xy[0] - ob.x0) * os, iy + (xy[1] - ob.y0) * os]; };
+        box = { x: bx, y: by, w: bw, h: bh };
+      }
+      items.forEach(function (it) {
+        var f = it.code === 47 ? fOki : fMain;
+        it.d = it.ps.map(function (p) { return p.map(function (r) {
+          var out = "", lx = null, ly = null;
+          r.forEach(function (c, i) {
+            var xy = f(c);
+            if (i && i < r.length - 1 && Math.abs(xy[0] - lx) < 0.4 && Math.abs(xy[1] - ly) < 0.4) return;
+            out += (i ? "L" : "M") + xy[0].toFixed(1) + "," + xy[1].toFixed(1); lx = xy[0]; ly = xy[1];
+          });
+          return out + "Z";
+        }).join(""); }).join("");
+      });
+      // 実際に描かれる範囲（拡大・移動の基準）
+      var bx0 = Infinity, by0 = Infinity, bx1 = -Infinity, by1 = -Infinity;
+      items.forEach(function (it) { (it.d.match(/-?\d+\.?\d*,-?\d+\.?\d*/g) || []).forEach(function (pt) {
+        var q = pt.split(","), x = +q[0], y = +q[1];
+        if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y;
+      }); });
+      if (box) { bx0 = Math.min(bx0, box.x); by0 = Math.min(by0, box.y); }
+      return { W: W, H: H, items: items, box: box, C: { x: bx0 - 12, y: by0 - 12, w: bx1 - bx0 + 24, h: by1 - by0 + 24 } };
+    }
+    /* 拡大・移動：viewBox を動かす。スマホは最初から少し拡大して画面いっぱいに */
+    var C = null, vb = null, onTapFn = null, touched = false;
+    function size() { var r = el.getBoundingClientRect(); return { w: r.width || 1, h: r.height || 1 }; }
+    function apply() { if (el && vb) el.setAttribute("viewBox", vb.x.toFixed(1) + " " + vb.y.toFixed(1) + " " + vb.w.toFixed(1) + " " + vb.h.toFixed(1)); }
+    function containW() { var z = size(), a = z.w / z.h; return C.w / C.h > a ? C.w : C.h * a; }
+    function setView(cx, cy, w) {
+      var z = size(), a = z.w / z.h, maxW = containW() * 1.05, minW = C.w / 10;
+      w = Math.max(minW, Math.min(maxW, w));
+      var h = w / a;
+      cx = Math.max(C.x, Math.min(C.x + C.w, cx)); cy = Math.max(C.y, Math.min(C.y + C.h, cy));
+      vb = { x: cx - w / 2, y: cy - h / 2, w: w, h: h }; apply();
+    }
+    function fitAll() { setView(C.x + C.w / 2, C.y + C.h / 2, containW()); }
+    function fitStart() {
+      var z = size();
+      if (z.w / z.h < 0.85) setView(C.x + C.w * 0.53, C.y + C.h * 0.5, C.w * 0.74); // 縦長（スマホ）は本州が画面いっぱいになるように
+      else fitAll();
+    }
+    function zoomBy(f, px, py) { // f<1 で拡大。px,py は画面上の基準点（省略時は中央）
+      if (!vb) return;
+      var z = size(); px = px == null ? z.w / 2 : px; py = py == null ? z.h / 2 : py;
+      var sx = vb.x + px / z.w * vb.w, sy = vb.y + py / z.h * vb.h;
+      var nw = vb.w * f, nh = nw / (z.w / z.h);
+      setView(sx - (px / z.w) * nw + nw / 2, sy - (py / z.h) * nh + nh / 2, nw);
+    }
+    function attachGestures(svg) {
+      var pts = new Map(), start = null, moved = 0, downTarget = null;
+      function snapshot() {
+        var a = Array.from(pts.values()), r = svg.getBoundingClientRect();
+        var mx = a.reduce(function (s, p) { return s + p.x; }, 0) / a.length - r.left, my = a.reduce(function (s, p) { return s + p.y; }, 0) / a.length - r.top;
+        var d = a.length > 1 ? Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y) : 0;
+        return { vb: Object.assign({}, vb), mx: mx, my: my, d: d, n: a.length };
+      }
+      svg.addEventListener("pointerdown", function (e) {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        try { svg.setPointerCapture(e.pointerId); } catch (x) {}
+        if (pts.size === 1) { moved = 0; downTarget = e.target.closest(".jmap-pref"); }
+        start = snapshot();
+      });
+      svg.addEventListener("pointermove", function (e) {
+        if (!pts.has(e.pointerId) || !start) return;
+        var prev = pts.get(e.pointerId); moved += Math.abs(e.clientX - prev.x) + Math.abs(e.clientY - prev.y);
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        var now = snapshot(), z = size();
+        if (now.n !== start.n) { start = now; return; }
+        var w = start.vb.w * (start.n > 1 && now.d ? start.d / now.d : 1), h = w / (z.w / z.h);
+        // 指の下の地点が指についてくるように
+        var sx = start.vb.x + start.mx / z.w * start.vb.w, sy = start.vb.y + start.my / z.h * start.vb.h;
+        setView(sx - now.mx / z.w * w + w / 2, sy - now.my / z.h * h + h / 2, w);
+        if (moved > 6) { svg.classList.add("is-drag"); touched = true; }
+      });
+      function end(e) {
+        if (!pts.has(e.pointerId)) return;
+        var single = pts.size === 1;
+        pts.delete(e.pointerId);
+        start = pts.size ? snapshot() : null;
+        svg.classList.remove("is-drag");
+        if (single && e.type === "pointerup" && moved < 8 && downTarget && onTapFn) onTapFn(+downTarget.dataset.code);
+      }
+      svg.addEventListener("pointerup", end); svg.addEventListener("pointercancel", end);
+      svg.addEventListener("wheel", function (e) { // トラックパッドのピンチ（ctrl+ホイール）だけ拡大に使う
+        if (!e.ctrlKey) return; e.preventDefault();
+        var r = svg.getBoundingClientRect(); zoomBy(Math.exp(e.deltaY * 0.01), e.clientX - r.left, e.clientY - r.top);
+      }, { passive: false });
+      window.addEventListener("resize", function () { if (!vb || !el || !el.isConnected) return; if (touched) setView(vb.x + vb.w / 2, vb.y + vb.h / 2, vb.w); else fitStart(); });
+    }
+    async function mount(container, onTap) {
+      onTapFn = onTap;
+      if (!el) {
+        var data = window.JAPAN_MAP || build(await loadGeo()), NS = "http://www.w3.org/2000/svg";
+        C = data.C;
+        var svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "jmap"); svg.setAttribute("role", "group");
+        if (data.box) { var r = document.createElementNS(NS, "rect"); [["x", data.box.x], ["y", data.box.y], ["width", data.box.w], ["height", data.box.h], ["rx", 6], ["class", "jmap-inset"]].forEach(function (a) { r.setAttribute(a[0], a[1]); }); svg.appendChild(r); }
+        data.items.forEach(function (it) {
+          var p = document.createElementNS(NS, "path");
+          p.setAttribute("d", it.d); p.setAttribute("class", "jmap-pref"); p.setAttribute("fill-rule", "evenodd");
+          p.setAttribute("tabindex", "0"); p.setAttribute("role", "link"); p.dataset.code = it.code;
+          svg.appendChild(p); (paths[it.code] = paths[it.code] || []).push(p);
+        });
+        svg.addEventListener("keydown", function (e) { if (e.key !== "Enter" && e.key !== " ") return; var p = e.target.closest(".jmap-pref"); if (p) { e.preventDefault(); onTapFn(+p.dataset.code); } });
+        svg.addEventListener("pointermove", function (e) {
+          var p = e.target.closest && e.target.closest(".jmap-pref"); var sc = svg.closest(".map-scroll");
+          if (!p || !sc || e.pointerType !== "mouse" || e.buttons) { if (tip) tip.hidden = true; return; }
+          if (!tip) { tip = document.createElement("div"); tip.className = "map-tip"; }
+          if (tip.parentNode !== sc) sc.appendChild(tip);
+          var rect = sc.getBoundingClientRect();
+          tip.textContent = p.getAttribute("aria-label"); tip.hidden = false;
+          tip.style.left = (e.clientX - rect.left) + "px"; tip.style.top = (e.clientY - rect.top) + "px";
+        });
+        svg.addEventListener("pointerleave", function () { if (tip) tip.hidden = true; });
+        attachGestures(svg);
+        el = svg;
+        container.textContent = ""; container.appendChild(el);
+        fitStart();
+      } else {
+        container.textContent = ""; container.appendChild(el);
+        if (!touched) fitStart(); else if (vb) setView(vb.x + vb.w / 2, vb.y + vb.h / 2, vb.w);
+      }
+      paint();
+    }
+    function paint() {
+      if (!el || !S.idx) return;
+      Object.keys(paths).forEach(function (code) {
+        var pref = S.idx.prefs[code]; if (!pref) return;
+        var st = prefState(pref), label = nm(pref) + " · " + st.got + "/" + st.total + " " + t("stampsOf");
+        paths[code].forEach(function (p) { p.classList.toggle("is-visited", st.visited && !st.conq); p.classList.toggle("is-conq", st.conq); p.setAttribute("aria-label", label); });
+      });
+      if (tip) tip.hidden = true;
+    }
+    return { mount: mount, paint: paint, zoom: function (f) { touched = true; zoomBy(f); }, fit: function () { if (C) { touched = true; fitAll(); } } };
+  })();
+
+  /* ---------- 画面 ---------- */
+  function route() { var h = (location.hash || "").replace(/^#/, ""); if (h.indexOf("pref-") === 0) return { v: "pref", slug: h.slice(5) }; if (h === "passport" || h === "account") return { v: h }; return { v: "home" }; }
+
+  function renderNav(r) {
+    var acc = S.mode === "user" ? esc(S.user.username) : S.mode === "demo" ? t("account") : t("login");
+    $("#tagline").textContent = t("tagline");
+    $("#nav").innerHTML =
+      (S.mode === "demo" ? '<span class="chip-demo">Demo</span>' : "") +
+      '<a href="#home"' + (r.v === "home" || r.v === "pref" ? ' aria-current="page"' : "") + ">" + t("map") + "</a>" +
+      '<a href="#passport"' + (r.v === "passport" ? ' aria-current="page"' : "") + ">" + t("passport") + "</a>" +
+      '<a href="#account"' + (r.v === "account" ? ' aria-current="page"' : "") + ">" + acc + "</a>" +
+      '<button type="button" class="lang" data-act="lang">' + (lang === "en" ? "日本語" : "EN") + "</button>";
+    $("#foot").innerHTML = esc(t("foot")) + ' · Map data: <a href="https://www.amcharts.com/" target="_blank" rel="noopener">amCharts</a>';
+    document.documentElement.lang = lang;
+  }
+
+  function stampHtml(e) {
+    var on = !!S.stamps[e.id];
+    return '<span class="stamp" aria-hidden="true"><span class="t">' + (e.cat === "food" ? "FOOD" : "DO") + '</span><span class="k">' +
+      (e.cat === "food" ? t("foodK") : t("actK")) + '</span><span class="d">' + (on ? fmtDate(S.stamps[e.id]).slice(2) : "") + "</span></span>";
+  }
+
+  function viewHome() {
+    var tt = totals(), idx = S.idx;
+    var pct = function (a, b) { return b ? Math.round(a / b * 100) : 0; };
+    var note = S.mode === "demo" ? '<div class="notice">' + t("demoNote") + "</div>"
+      : S.mode === "guest" ? '<div class="notice"><span>' + t("guestNote") + '</span><a href="#account">' + t("guestCta") + "</a></div>" : "";
+    var regions = idx.regions.map(function (r) {
+      var v = r.prefs.filter(function (p) { return prefState(p).visited; }).length;
+      return '<div class="region"><h3><span>' + esc(nm(r)) + '</span><span class="num">' + v + "/" + r.prefs.length + '</span></h3><div class="prefs">' +
+        r.prefs.map(function (p) { var s = prefState(p); return '<a class="pchip ' + s.cls + '" href="#pref-' + p.slug + '">' + esc(nm(p)) + '<span class="num">' + s.got + "/" + s.total + "</span></a>"; }).join("") +
+        "</div></div>";
+    }).join("");
+    return '<section class="stage" id="stage">' +
+        '<div class="map-scroll" id="mapScroll"><div class="map-box" id="mapBox"><div class="map-status">…</div></div>' +
+          '<div class="ov-count"><b>' + tt.stamps + '</b>/' + idx.total + ' ' + t("stampsOf") + ' · <b>' + tt.prefs + '</b>/47 ' + t("prefsShort") + '</div>' +
+          '<div class="zoom-btns"><button type="button" data-act="zin" aria-label="Zoom in">+</button><button type="button" data-act="zout" aria-label="Zoom out">−</button><button type="button" data-act="zfit" aria-label="' + t("fit") + '" title="' + t("fit") + '">⤢</button></div>' +
+        '</div>' +
+        '<div class="stage-bar"><div class="legend"><span><i></i>' + t("legendNone") + '</span><span><i class="v"></i>' + t("legendVisited") + '</span><span><i class="c"></i>' + t("legendConq") + '</span></div><a href="#stats" data-act="more">' + t("more") + '</a></div>' +
+      '</section>' +
+      '<div class="wrap" id="stats">' +
+      '<section class="hero"><div><h1>' + t("heroA") + "<br><em>" + t("heroB") + "</em></h1><p>" + t("heroP") + '</p><p class="muted" style="font-size:.85rem">' + t("tapHint") + "</p></div>" +
+      '<div class="tally">' +
+        '<div class="big">' + tt.prefs + "<small>/47</small></div>" +
+        '<div class="big">' + tt.stamps + "<small>/" + idx.total + "</small></div>" +
+        '<div class="big">' + tt.conq + "</div>" +
+        '<div class="lbl">' + t("prefs") + '</div><div class="lbl">' + t("stamps") + '</div><div class="lbl">' + t("conquered") + "</div></div>" +
+      '<div class="bars">' +
+        '<div class="bar food"><span class="tag">' + t("food") + '</span><i><span style="width:' + pct(tt.food, idx.totalFood) + '%"></span></i><span class="num">' + tt.food + "/" + idx.totalFood + "</span></div>" +
+        '<div class="bar act"><span class="tag">' + t("activity") + '</span><i><span style="width:' + pct(tt.act, idx.totalAct) + '%"></span></i><span class="num">' + tt.act + "/" + idx.totalAct + "</span></div>" +
+      "</div></section>" + note +
+      '<section class="section"><h2 style="margin-bottom:12px">' + t("byRegion") + '</h2><div class="regions">' + regions + "</div></section></div>";
+  }
+
+  function viewPref(slug) {
+    var p = S.idx.prefBySlug[slug];
+    if (!p) return '<div class="wrap"><p class="empty">Not found. <a href="#home">' + t("back") + "</a></p></div>";
+    var st = prefState(p);
+    var groups = ["food", "activity"].map(function (cat) {
+      var list = p.exps.filter(function (e) { return e.cat === cat; });
+      var got = list.filter(function (e) { return S.stamps[e.id]; }).length;
+      return '<section class="city"><div class="group-head ' + cat + '"><h2>' + (cat === "food" ? t("food") : t("activity")) + '</h2><span class="num muted">' + got + "/" + list.length + '</span></div><div class="exps">' +
+        list.map(function (e) {
+          var on = !!S.stamps[e.id], c = S.idx.cities[e.city];
+          return '<button type="button" class="exp ' + e.cat + (on ? " is-on" : "") + (justStamped === e.id ? " just" : "") + '" data-act="stamp" data-id="' + esc(e.id) + '" aria-pressed="' + on + '">' +
+            stampHtml(e) + '<span><span class="city-tag">' + esc(nm(c)) + "</span><h3>" + esc(nm(e)) + "<small>" + esc(sub(e)) + "</small></h3><p>" + esc(lang === "ja" ? e.dja : e.den) + '</p><div class="act-line">' +
+            (on ? t("stamped") : t("stampIt")) + "</div></span></button>";
+        }).join("") + "</div></section>";
+    }).join("");
+    return '<div class="wrap"><div class="crumb"><a href="#home">← ' + t("back") + "</a> / " + esc(nm(S.idx.regions.find(function (r) { return r.id === p.region; }))) + "</div>" +
+      '<div class="pref-head"><h1>' + esc(nm(p)) + "<small>" + esc(sub(p)) + '</small></h1><div class="num" style="font-size:1.1rem">' + st.got + "/" + st.total + " " + t("stampsOf") +
+      (st.conq ? ' &nbsp;<span class="seal">制覇 CONQUERED</span>' : "") + "</div></div>" +
+      '<div class="cities">' + groups + "</div></div>";
+  }
+
+  function viewPassport() {
+    var list = Object.keys(S.stamps).map(function (id) { return S.idx.exps[id]; }).filter(Boolean)
+      .sort(function (a, b) { return S.stamps[a.id] < S.stamps[b.id] ? 1 : -1; });
+    var conq = Object.keys(S.idx.prefs).map(function (k) { return S.idx.prefs[k]; }).filter(function (p) { return prefState(p).conq; });
+    var body = list.length ? '<div class="book">' + list.map(function (e) {
+      var c = S.idx.cities[e.city], p = S.idx.prefs[c.pref];
+      return '<a class="item ' + e.cat + ' is-on" href="#pref-' + p.slug + '">' + stampHtml(e) + '<span class="name">' + esc(nm(e)) + '</span><span class="where">' + esc(nm(c)) + ", " + esc(nm(p)) + "</span></a>";
+    }).join("") + "</div>" : '<p class="empty">' + t("bookEmpty") + ' <a href="#home">' + t("bookGo") + "</a></p>";
+    return '<div class="wrap"><section class="hero" style="grid-template-columns:1fr"><div><h1>' + t("bookTitle") + "</h1><p class=\"num\">" + list.length + " / " + S.idx.total + " " + t("stampsOf") + "</p></div></section>" +
+      (conq.length ? '<section class="section" style="padding-bottom:0"><h2>' + t("sealsTitle") + '</h2><div class="seals">' + conq.map(function (p) { return '<a class="seal" href="#pref-' + p.slug + '">' + esc(nm(p)) + " 制覇</a>"; }).join("") + "</div></section>" : "") +
+      body + "</div>";
+  }
+
+  function viewAccount() {
+    var head = '<div class="wrap"><section class="hero" style="grid-template-columns:1fr"><h1>' + t("account") + "</h1></section>";
+    if (S.mode === "demo") return head + '<div class="card" style="margin-bottom:40px">' + t("demoAcc") + "</div></div>";
+    if (S.mode === "user") return head + '<div class="card" style="margin-bottom:40px"><p style="margin:0">' + t("loggedAs") + " <b>" + esc(S.user.username) + '</b></p><button class="btn" type="button" data-act="logout">' + t("logout") + "</button></div></div>";
+    var form = function (id, title, btn) {
+      return '<form class="card" id="' + id + '"><h2>' + title + '</h2><label for="' + id + '-u">' + t("user") + '</label><input id="' + id + '-u" name="username" autocomplete="username" required pattern="[A-Za-z0-9_]{3,20}" title="' + t("userHint") + '">' +
+        '<label for="' + id + '-p">' + t("pass") + '</label><input id="' + id + '-p" name="password" type="password" minlength="8" required autocomplete="' + (id === "fSignup" ? "new-password" : "current-password") + '">' +
+        '<button class="btn" type="submit">' + btn + '</button><p class="err" id="' + id + '-err"></p></form>';
+    };
+    return head + '<div class="forms">' + form("fSignup", t("signup"), t("signupBtn")) + form("fLogin", t("login"), t("loginBtn")) + "</div></div>";
+  }
+
+  var lastView = "";
+  function render() {
+    var r = route(); renderNav(r);
+    var html = r.v === "pref" ? viewPref(r.slug) : r.v === "passport" ? viewPassport() : r.v === "account" ? viewAccount() : viewHome();
+    var view = $("#view"), key = r.v + (r.slug || "");
+    var y = window.scrollY;
+    view.innerHTML = html;
+    if (key === lastView) window.scrollTo(0, y); else window.scrollTo(0, 0);
+    lastView = key; justStamped = null;
+    if (r.v === "home") {
+      var hh = $(".top").getBoundingClientRect().height; $("#stage").style.setProperty("--head-h", Math.round(hh) + "px");
+      JMap.mount($("#mapBox"), function (code) { var p = S.idx.prefs[code]; if (p) location.hash = "pref-" + p.slug; })
+        .catch(function () { var b = $("#mapBox"); if (b) b.innerHTML = '<div class="map-status">' + t("mapFail") + "</div>"; });
+    }
+  }
+
+  /* ---------- イベント ---------- */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]"); if (!b) return;
+    var act = b.dataset.act;
+    if (act === "stamp") toggleStamp(b.dataset.id);
+    else if (act === "zin") JMap.zoom(0.7);
+    else if (act === "zout") JMap.zoom(1 / 0.7);
+    else if (act === "zfit") JMap.fit();
+    else if (act === "more") { e.preventDefault(); var st = $("#stats"); if (st) st.scrollIntoView({ behavior: "smooth" }); }
+    else if (act === "lang") { lang = lang === "en" ? "ja" : "en"; LS.set(KEY_LANG, lang); render(); }
+    else if (act === "logout") { api("POST", "/api/logout").finally(function () { S.mode = "guest"; S.user = null; S.visits = {}; S.stamps = {}; location.hash = "home"; render(); }); }
+  });
+  document.addEventListener("submit", function (e) {
+    var f = e.target; if (f.id !== "fSignup" && f.id !== "fLogin") return;
+    e.preventDefault();
+    var err = $("#" + f.id + "-err"); err.textContent = "";
+    var body = { username: f.username.value.trim(), password: f.password.value };
+    var guest = { visits: Object.keys(S.visits).map(function (k) { return { city: k, at: S.visits[k] }; }), stamps: Object.keys(S.stamps).map(function (k) { return { exp: k, at: S.stamps[k] }; }) };
+    var hadGuest = guest.visits.length + guest.stamps.length > 0;
+    api("POST", f.id === "fSignup" ? "/api/signup" : "/api/login", body)
+      .then(function (d) { S.user = { username: d.username }; S.mode = "user"; return hadGuest ? api("POST", "/api/import", guest) : api("GET", "/api/progress"); })
+      .then(function (p) { fromRows(p); LS.del(KEY_PROGRESS); if (hadGuest) toast(t("synced")); location.hash = "home"; render(); })
+      .catch(function (x) { err.textContent = x.message; });
+  });
+  window.addEventListener("hashchange", render);
+
+  /* ---------- 起動 ---------- */
+  async function boot() {
+    var cat = window.DEMO_CATALOG || null;
+    if (cat) S.mode = "demo";
+    else {
+      try { cat = await api("GET", "/api/catalog"); } catch (e) { $("#view").innerHTML = '<div class="wrap"><p class="empty">Could not load data.</p></div>'; return; }
+      try { var me = await api("GET", "/api/me"); S.user = me; S.mode = "user"; fromRows(await api("GET", "/api/progress")); } catch (e) { S.mode = "guest"; }
+    }
+    S.idx = buildIndex(cat);
+    if (S.mode !== "user") { var p = LS.get(KEY_PROGRESS, {}); S.visits = p.visits || {}; S.stamps = p.stamps || {}; }
+    render();
+  }
+  boot();
+})();
+</script>
+</body>
+</html>

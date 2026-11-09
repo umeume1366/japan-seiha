@@ -1,0 +1,243 @@
+// 北海道・東北・関東のスタンプ（各県 グルメ5＋体験5）
+// c: 都市 [id, 英語名, 日本語名] / f: グルメ / a: 体験
+// 行の形：[都市id, key, 英語名, 日本語名, 英語の一言, 日本語の一言]
+export default {
+  hokkaido: {
+    c: [["sapporo", "Sapporo", "札幌市"], ["hakodate", "Hakodate", "函館市"], ["otaru", "Otaru", "小樽市"], ["furano", "Furano area", "富良野エリア"], ["asahikawa", "Asahikawa", "旭川市"]],
+    f: [
+      ["sapporo", "miso-ramen", "Miso ramen", "味噌ラーメン", "Rich miso-broth ramen, born in Sapporo.", "札幌発祥、コク深い味噌ラーメン。"],
+      ["sapporo", "soup-curry", "Soup curry", "スープカレー", "Spiced curry broth with big chunks of vegetables.", "大きな野菜が入ったスパイスの効いたスープカレー。"],
+      ["sapporo", "jingisukan", "Jingisukan (grilled lamb)", "ジンギスカン", "Lamb and vegetables grilled on a dome-shaped pan.", "山型の鍋で焼く羊肉と野菜。"],
+      ["hakodate", "kaisen-don", "Morning market seafood bowl", "函館朝市の海鮮丼", "Squid, uni and salmon roe over rice.", "イカ・ウニ・いくらをどんぶりで。"],
+      ["otaru", "sushi", "Otaru sushi", "小樽の寿司", "Sushi Street in the old canal port town.", "運河の港町「寿司屋通り」で。"],
+    ],
+    a: [
+      ["sapporo", "odori-park", "Odori Park & TV Tower", "大通公園とさっぽろテレビ塔", "The city's green spine and Snow Festival venue.", "街の中心。2月は雪まつりの会場。"],
+      ["hakodate", "mt-hakodate", "Mt. Hakodate night view", "函館山の夜景", "Ride the ropeway up for a classic night view.", "ロープウェイで登る日本有数の夜景。"],
+      ["otaru", "canal", "Otaru Canal stroll", "小樽運河散策", "Stone warehouses and gas lamps along the canal.", "石造り倉庫とガス灯の運河を歩く。"],
+      ["furano", "lavender", "Lavender fields at Farm Tomita", "ファーム富田のラベンダー畑", "Purple hills in July.", "7月は丘一面が紫に。"],
+      ["asahikawa", "asahiyama-zoo", "Asahiyama Zoo", "旭山動物園", "Famous for its winter penguin walk.", "冬のペンギンの散歩で有名。"],
+    ],
+  },
+  aomori: {
+    c: [["aomori-city", "Aomori", "青森市"], ["hirosaki", "Hirosaki", "弘前市"], ["hachinohe", "Hachinohe", "八戸市"], ["towada", "Towada", "十和田市"]],
+    f: [
+      ["aomori-city", "nokke-don", "Nokke-don", "のっけ丼", "Build your own seafood bowl at Furukawa market.", "古川市場で好きな刺身をのせて自分の丼に。"],
+      ["aomori-city", "kaiyaki-miso", "Kaiyaki miso", "貝焼き味噌", "Scallops simmered with egg and miso in the shell.", "ホタテを殻ごと卵と味噌で煮る郷土料理。"],
+      ["hirosaki", "apple-pie", "Hirosaki apple pie", "弘前のアップルパイ", "Japan's apple capital bakes dozens of styles.", "りんごの街で食べ比べ。"],
+      ["hachinohe", "senbei-jiru", "Senbei-jiru", "八戸せんべい汁", "Rice crackers simmered in a soy-based soup.", "南部せんべいを入れて煮込む汁物。"],
+      ["hachinohe", "ichigo-ni", "Ichigo-ni soup", "いちご煮", "Clear soup with sea urchin and abalone.", "ウニとアワビのお吸い物。"],
+    ],
+    a: [
+      ["aomori-city", "nebuta", "Nebuta Museum WA-RASSE", "ねぶたの家 ワ・ラッセ", "See giant illuminated festival floats up close.", "ねぶた祭の巨大な灯籠を間近で。"],
+      ["aomori-city", "sannai-maruyama", "Sannai-Maruyama Jomon site", "三内丸山遺跡", "A 5,000-year-old Jomon village, World Heritage.", "約5,000年前の縄文の村。世界遺産。"],
+      ["aomori-city", "hakkoda", "Hakkoda Ropeway", "八甲田ロープウェー", "Mountain views and 'snow monsters' in winter.", "山頂からの眺め、冬は樹氷。"],
+      ["hirosaki", "hirosaki-castle", "Hirosaki Castle cherry blossoms", "弘前城と桜", "2,600 cherry trees around the castle in late April.", "4月下旬、約2,600本の桜。"],
+      ["towada", "oirase", "Oirase Gorge walk", "奥入瀬渓流", "Waterfalls and mossy rocks along a forest stream.", "滝と苔むした岩の渓流を歩く。"],
+    ],
+  },
+  iwate: {
+    c: [["morioka", "Morioka", "盛岡市"], ["hiraizumi", "Hiraizumi", "平泉町"], ["ichinoseki", "Ichinoseki", "一関市"], ["hanamaki", "Hanamaki", "花巻市"], ["miyako", "Miyako", "宮古市"]],
+    f: [
+      ["morioka", "wanko-soba", "Wanko soba challenge", "わんこそば", "Bite-size bowls keep coming until you close the lid.", "ふたを閉めるまでおかわりが続く。"],
+      ["morioka", "reimen", "Morioka reimen", "盛岡冷麺", "Chewy cold noodles with kimchi.", "コシの強い麺とキムチの冷麺。"],
+      ["morioka", "jajamen", "Jajamen", "じゃじゃ麺", "Udon with meat miso; finish with an egg soup.", "肉味噌をからめ、最後は卵スープで。"],
+      ["ichinoseki", "mochi", "Mochi course", "一関のもち料理", "Many flavors of rice cake in one meal.", "さまざまな味のもちを一度に。"],
+      ["miyako", "sanriku-uni", "Sanriku sea urchin", "三陸のウニ", "Fresh uni from the Pacific coast (summer).", "夏の三陸海岸の新鮮なウニ。"],
+    ],
+    a: [
+      ["hiraizumi", "chusonji", "Chuson-ji Konjikido", "中尊寺金色堂", "A World Heritage hall covered in gold leaf.", "金箔で覆われた世界遺産のお堂。"],
+      ["hiraizumi", "motsuji", "Motsu-ji garden", "毛越寺庭園", "A Pure Land garden from the 12th century.", "12世紀の浄土庭園。"],
+      ["ichinoseki", "geibikei", "Geibikei Gorge boat ride", "猊鼻渓舟下り", "Boatmen sing as they pole between cliffs.", "船頭の唄を聞きながら断崖の間を進む。"],
+      ["hanamaki", "miyazawa-kenji", "Miyazawa Kenji Museum", "宮沢賢治記念館", "The world of the author of Night on the Galactic Railroad.", "『銀河鉄道の夜』の作家の世界。"],
+      ["miyako", "jodogahama", "Jodogahama Beach", "浄土ヶ浜", "White rocks and clear blue water.", "白い岩と透き通る海。"],
+    ],
+  },
+  miyagi: {
+    c: [["sendai", "Sendai", "仙台市"], ["matsushima", "Matsushima", "松島町"], ["shiogama", "Shiogama", "塩竈市"], ["zao-miyagi", "Zao", "蔵王町"], ["shiroishi", "Shiroishi", "白石市"]],
+    f: [
+      ["sendai", "gyutan", "Grilled beef tongue", "牛たん焼き", "Thick-cut gyutan with barley rice.", "厚切り牛たんを麦ごはんで。"],
+      ["sendai", "zunda", "Zunda mochi", "ずんだ餅", "Rice cake with sweet green soybean paste.", "枝豆のあんをのせたお餅。"],
+      ["sendai", "sasakama", "Sasa-kamaboko", "笹かまぼこ", "Leaf-shaped fish cakes; grill your own.", "笹の葉の形のかまぼこ。手焼き体験も。"],
+      ["shiogama", "sushi", "Shiogama sushi", "塩釜の寿司", "A port town with one of Japan's densest sushi scenes.", "寿司店の多い港町で。"],
+      ["matsushima", "oysters", "Matsushima oysters", "松島のかき", "Grilled oysters from the bay (winter).", "冬の松島湾の焼きがき。"],
+    ],
+    a: [
+      ["sendai", "zuihoden", "Zuihoden Mausoleum", "瑞鳳殿", "Ornate resting place of Date Masamune.", "伊達政宗が眠る色鮮やかな霊屋。"],
+      ["matsushima", "bay-cruise", "Matsushima Bay cruise", "松島湾クルーズ", "Sail among 260 pine-covered islets.", "260余りの島々を船でめぐる。"],
+      ["matsushima", "zuiganji", "Zuigan-ji Temple", "瑞巌寺", "Zen temple with cave shrines carved in rock.", "岩をくりぬいた洞窟が並ぶ禅寺。"],
+      ["zao-miyagi", "okama", "Zao Okama crater lake", "蔵王の御釜", "An emerald lake inside a volcanic crater.", "火口にたたえたエメラルド色の湖。"],
+      ["shiroishi", "fox-village", "Zao Fox Village", "蔵王キツネ村", "Over 100 foxes roaming freely.", "100匹以上のキツネが放し飼い。"],
+    ],
+  },
+  akita: {
+    c: [["akita-city", "Akita", "秋田市"], ["semboku", "Semboku", "仙北市"], ["oga", "Oga", "男鹿市"], ["yokote", "Yokote", "横手市"], ["yuzawa-akita", "Yuzawa", "湯沢市"], ["odate", "Odate", "大館市"]],
+    f: [
+      ["akita-city", "kiritanpo", "Kiritanpo hotpot", "きりたんぽ鍋", "Toasted rice sticks in chicken broth.", "焼いたごはんを鶏だしで煮込む鍋。"],
+      ["akita-city", "hatahata", "Hatahata (sandfish)", "ハタハタ料理", "Akita's winter fish, grilled or in hotpot.", "秋田の冬の魚。焼きや鍋で。"],
+      ["yokote", "yakisoba", "Yokote yakisoba", "横手やきそば", "Thick noodles topped with a fried egg.", "太麺に目玉焼きをのせた焼きそば。"],
+      ["yuzawa-akita", "inaniwa-udon", "Inaniwa udon", "稲庭うどん", "Thin, silky hand-stretched udon.", "細くなめらかな手延べうどん。"],
+      ["odate", "hinai-jidori", "Hinai-jidori oyakodon", "比内地鶏の親子丼", "Rich chicken-and-egg bowl with local chicken.", "比内地鶏の濃厚な親子丼。"],
+    ],
+    a: [
+      ["semboku", "samurai-district", "Kakunodate samurai district", "角館武家屋敷通り", "Preserved samurai houses under weeping cherries.", "しだれ桜と武家屋敷の通り。"],
+      ["semboku", "nyuto-onsen", "Nyuto Onsen", "乳頭温泉郷", "Milky-white hot springs deep in the forest.", "森の奥の乳白色の温泉。"],
+      ["semboku", "lake-tazawa", "Lake Tazawa", "田沢湖", "Japan's deepest lake, with a golden statue.", "日本一深い湖と金色のたつこ像。"],
+      ["oga", "namahage", "Namahage Museum", "なまはげ館", "Meet the masked demons of New Year's Eve.", "大晦日にやってくる鬼「なまはげ」。"],
+      ["akita-city", "kanto", "Try a kanto lantern pole", "ねぶり流し館で竿燈体験", "Balance a pole of lanterns like festival performers.", "提灯をつけた竿をバランスで支える。"],
+    ],
+  },
+  yamagata: {
+    c: [["yamagata-city", "Yamagata", "山形市"], ["obanazawa", "Obanazawa", "尾花沢市"], ["yonezawa", "Yonezawa", "米沢市"], ["tsuruoka", "Tsuruoka", "鶴岡市"], ["higashine", "Higashine", "東根市"], ["tozawa", "Tozawa", "戸沢村"]],
+    f: [
+      ["yamagata-city", "imoni", "Imoni taro stew", "芋煮", "Taro and beef stew, Yamagata's autumn soul food.", "里芋と牛肉の鍋。秋の定番。"],
+      ["yamagata-city", "hiyashi-ramen", "Cold ramen", "冷やしラーメン", "Ramen served in chilled broth with ice.", "氷が浮かぶ冷たいスープのラーメン。"],
+      ["yonezawa", "yonezawa-beef", "Yonezawa beef", "米沢牛", "One of Japan's top wagyu brands.", "日本有数のブランド和牛。"],
+      ["higashine", "cherries", "Cherry picking", "さくらんぼ狩り", "Eat sweet cherries straight from the tree (Jun–Jul).", "6〜7月、木からもいで食べ放題。"],
+      ["tsuruoka", "shojin", "Dewa Sanzan shojin ryori", "出羽三山の精進料理", "Mountain-vegetable cuisine of the ascetic monks.", "山伏の精進料理。"],
+    ],
+    a: [
+      ["yamagata-city", "yamadera", "Yamadera (Risshaku-ji)", "山寺（立石寺）", "Climb 1,000+ steps to a temple on the cliff.", "千段以上の石段を登って崖の上のお堂へ。"],
+      ["yamagata-city", "juhyo", "Zao snow monsters", "蔵王の樹氷", "Trees frozen into giant ice figures (winter).", "冬、木が凍って巨大な「モンスター」に。"],
+      ["obanazawa", "ginzan", "Ginzan Onsen", "銀山温泉", "Wooden inns along a river, lit by gas lamps.", "川沿いの木造旅館とガス灯。"],
+      ["tsuruoka", "haguro", "Mt. Haguro five-story pagoda", "羽黒山五重塔", "A National Treasure among giant cedars.", "杉並木の中に立つ国宝の塔。"],
+      ["tozawa", "mogami-river", "Mogami River boat ride", "最上川舟下り", "Float down the river from Basho's famous haiku.", "芭蕉の句に詠まれた川を下る。"],
+    ],
+  },
+  fukushima: {
+    c: [["aizuwakamatsu", "Aizuwakamatsu", "会津若松市"], ["kitakata", "Kitakata", "喜多方市"], ["shimogo", "Shimogo", "下郷町"], ["fukushima-city", "Fukushima", "福島市"], ["iwaki", "Iwaki", "いわき市"], ["inawashiro", "Inawashiro", "猪苗代町"]],
+    f: [
+      ["aizuwakamatsu", "wappa-meshi", "Wappa-meshi", "わっぱ飯", "Rice and toppings steamed in a cedar box.", "杉の曲げわっぱで蒸したごはん。"],
+      ["aizuwakamatsu", "aizu-sake", "Aizu sake", "会津の地酒", "Taste sake from award-winning local breweries.", "受賞歴の多い酒蔵の日本酒。"],
+      ["kitakata", "kitakata-ramen", "Kitakata ramen", "喜多方ラーメン", "Flat curly noodles; locals eat it for breakfast.", "平打ち縮れ麺。朝ラーも名物。"],
+      ["shimogo", "negi-soba", "Negi soba", "ねぎそば", "Soba eaten with a whole leek instead of chopsticks.", "箸の代わりに長ねぎで食べるそば。"],
+      ["fukushima-city", "peaches", "Fukushima peaches", "福島の桃", "Juicy peaches in summer.", "夏のみずみずしい桃。"],
+    ],
+    a: [
+      ["aizuwakamatsu", "tsuruga-castle", "Tsuruga Castle", "鶴ヶ城", "A red-tiled castle of samurai history.", "赤瓦の天守と会津の歴史。"],
+      ["aizuwakamatsu", "akabeko", "Paint an akabeko", "赤べこの絵付け体験", "Decorate the lucky red cow toy of Aizu.", "会津の縁起物、赤べこに色付け。"],
+      ["shimogo", "ouchi-juku", "Ouchi-juku post town", "大内宿", "Thatched-roof inns from the Edo period.", "茅葺き屋根の宿場町。"],
+      ["iwaki", "hawaiians", "Spa Resort Hawaiians", "スパリゾートハワイアンズ", "Hot-spring water park with hula shows.", "温泉プールとフラダンスショー。"],
+      ["inawashiro", "lake-inawashiro", "Lake Inawashiro & Mt. Bandai", "猪苗代湖と磐梯山", "A mirror lake under a volcano.", "磐梯山を映す大きな湖。"],
+    ],
+  },
+  ibaraki: {
+    c: [["mito", "Mito", "水戸市"], ["hitachinaka", "Hitachinaka", "ひたちなか市"], ["oarai", "Oarai", "大洗町"], ["daigo", "Daigo", "大子町"], ["ushiku", "Ushiku", "牛久市"], ["tsukuba", "Tsukuba", "つくば市"], ["hokota", "Hokota", "鉾田市"]],
+    f: [
+      ["mito", "natto", "Mito natto", "水戸納豆", "Japan's fermented soybeans, where they're most loved.", "本場で味わう納豆。"],
+      ["mito", "hitachi-beef", "Hitachi beef", "常陸牛", "Ibaraki's premium wagyu.", "茨城のブランド和牛。"],
+      ["oarai", "anko-nabe", "Anglerfish hotpot", "あんこう鍋", "A rich winter hotpot of the coast.", "冬の海辺の濃厚な鍋。"],
+      ["hitachinaka", "hoshiimo", "Dried sweet potato", "干し芋", "Chewy, naturally sweet; Japan's top producer.", "生産量日本一のねっとり干し芋。"],
+      ["hokota", "melon", "Ibaraki melon", "茨城メロン", "Sweet melons from Japan's No. 1 melon prefecture.", "生産量日本一のメロン。"],
+    ],
+    a: [
+      ["mito", "kairakuen", "Kairakuen Garden", "偕楽園", "One of Japan's three great gardens; 3,000 plum trees.", "日本三名園。約3,000本の梅。"],
+      ["hitachinaka", "seaside-park", "Hitachi Seaside Park", "国営ひたち海浜公園", "Blue nemophila in spring, red kochia in autumn.", "春はネモフィラ、秋はコキア。"],
+      ["daigo", "fukuroda", "Fukuroda Falls", "袋田の滝", "A four-tier waterfall; it freezes in winter.", "4段に落ちる滝。冬は凍ることも。"],
+      ["ushiku", "daibutsu", "Ushiku Daibutsu", "牛久大仏", "A 120-meter Buddha you can go inside.", "高さ120m、中に入れる大仏。"],
+      ["tsukuba", "mt-tsukuba", "Mt. Tsukuba", "筑波山", "Easy hike or cable car to twin peaks.", "ハイキングやケーブルカーで2つの山頂へ。"],
+    ],
+  },
+  tochigi: {
+    c: [["nikko", "Nikko", "日光市"], ["utsunomiya", "Utsunomiya", "宇都宮市"], ["nasu", "Nasu", "那須町"], ["sano", "Sano", "佐野市"], ["ashikaga", "Ashikaga", "足利市"], ["mashiko", "Mashiko", "益子町"]],
+    f: [
+      ["nikko", "yuba", "Nikko yuba", "日光ゆば", "Delicate tofu skin, a temple-town specialty.", "門前町の湯葉料理。"],
+      ["utsunomiya", "gyoza", "Utsunomiya gyoza", "宇都宮餃子", "Hop between shops in Japan's gyoza capital.", "餃子の街で食べ比べ。"],
+      ["utsunomiya", "strawberries", "Tochigi strawberries", "栃木のいちご", "Strawberry picking in Japan's No. 1 strawberry prefecture.", "生産量日本一のいちご狩り。"],
+      ["nasu", "dairy", "Nasu farm soft-serve", "那須の牧場ソフトクリーム", "Fresh milk ice cream at the highland farms.", "高原の牧場のしぼりたてソフト。"],
+      ["sano", "sano-ramen", "Sano ramen", "佐野ラーメン", "Hand-made noodles beaten with bamboo.", "青竹で打つ手打ち麺。"],
+    ],
+    a: [
+      ["nikko", "toshogu", "Nikko Toshogu Shrine", "日光東照宮", "Lavish carvings and the 'see no evil' monkeys.", "豪華な彫刻と三猿。"],
+      ["nikko", "kegon", "Kegon Falls & Lake Chuzenji", "華厳の滝と中禅寺湖", "A 97-meter waterfall from a mountain lake.", "山の湖から落ちる高さ97mの滝。"],
+      ["nikko", "edo-wonderland", "Edo Wonderland", "江戸ワンダーランド日光江戸村", "Dress up as a ninja or samurai in an Edo town.", "江戸の町で忍者や侍に変身。"],
+      ["ashikaga", "wisteria", "Ashikaga Flower Park wisteria", "あしかがフラワーパークの藤", "A 160-year-old wisteria lit up at night (spring).", "春、樹齢160年超の大藤がライトアップ。"],
+      ["mashiko", "pottery", "Mashiko pottery class", "益子焼の陶芸体験", "Make your own bowl in a famous pottery town.", "焼き物の町で自分の器づくり。"],
+    ],
+  },
+  gunma: {
+    c: [["kusatsu", "Kusatsu", "草津町"], ["shibukawa", "Shibukawa", "渋川市"], ["kanra", "Kanra", "甘楽町"], ["maebashi", "Maebashi", "前橋市"], ["tomioka", "Tomioka", "富岡市"], ["takasaki", "Takasaki", "高崎市"], ["minakami", "Minakami", "みなかみ町"]],
+    f: [
+      ["kusatsu", "onsen-manju", "Onsen manju", "温泉まんじゅう", "Steamed buns with sweet bean paste.", "温泉街の定番まんじゅう。"],
+      ["shibukawa", "mizusawa-udon", "Mizusawa udon", "水沢うどん", "Glossy, firm udon dipped in sesame sauce.", "つやとコシのあるうどんをごまだれで。"],
+      ["kanra", "konnyaku", "Konnyaku tasting", "こんにゃく料理", "Gunma grows most of Japan's konnyaku.", "全国の大半を生産するこんにゃく。"],
+      ["maebashi", "yaki-manju", "Yaki-manju", "焼きまんじゅう", "Grilled buns brushed with sweet miso.", "甘い味噌だれを塗って焼いたまんじゅう。"],
+      ["maebashi", "okkirikomi", "Okkirikomi noodles", "おっきりこみ", "Wide noodles simmered with vegetables.", "幅広の麺を野菜と煮込む郷土料理。"],
+    ],
+    a: [
+      ["kusatsu", "yubatake", "Yubatake & hot spring bath", "湯畑と温泉入浴", "Watch the steaming springs, then soak in them.", "湯けむりの湯畑を見て、その湯につかる。"],
+      ["shibukawa", "ikaho", "Ikaho Onsen stone steps", "伊香保温泉の石段街", "365 stone steps lined with inns and shops.", "旅館と店が並ぶ365段の石段。"],
+      ["tomioka", "silk-mill", "Tomioka Silk Mill", "富岡製糸場", "World Heritage silk factory from 1872.", "1872年創業の世界遺産の製糸場。"],
+      ["takasaki", "daruma", "Paint a Takasaki daruma", "高崎だるまの絵付け", "Decorate a lucky daruma doll.", "縁起物のだるまに絵付け。"],
+      ["minakami", "rafting", "Rafting in Minakami", "みなかみのラフティング", "Whitewater on the Tone River.", "利根川の急流を下る。"],
+    ],
+  },
+  saitama: {
+    c: [["kawagoe", "Kawagoe", "川越市"], ["soka", "Soka", "草加市"], ["chichibu", "Chichibu", "秩父市"], ["gyoda", "Gyoda", "行田市"], ["nagatoro", "Nagatoro", "長瀞町"], ["saitama-city", "Saitama", "さいたま市"]],
+    f: [
+      ["kawagoe", "sweet-potato", "Sweet potato treats", "さつまいもスイーツ", "Chips, soft-serve and more in 'Little Edo'.", "「小江戸」でチップスやソフトを。"],
+      ["soka", "senbei", "Soka senbei", "草加せんべい", "Hand-grilled soy rice crackers.", "手焼きの醤油せんべい。"],
+      ["chichibu", "waraji-katsu", "Waraji katsudon", "わらじかつ丼", "Two sandal-sized cutlets in sweet soy sauce.", "わらじのように大きなカツ2枚。"],
+      ["chichibu", "miso-butadon", "Miso pork bowl", "豚みそ丼", "Charcoal-grilled pork marinated in miso.", "味噌漬け豚の炭火焼き丼。"],
+      ["gyoda", "zeri-fry", "Zeri-fry", "ゼリーフライ", "Fried patty of okara and potato, a local snack.", "おからとじゃがいもの揚げ物。"],
+    ],
+    a: [
+      ["kawagoe", "kurazukuri", "Kurazukuri street & Bell of Time", "蔵造りの町並みと時の鐘", "Edo-era merchant houses.", "蔵造りの町並みを歩く。"],
+      ["nagatoro", "line-kudari", "Nagatoro river boat", "長瀞ライン下り", "Glide past rock terraces on a wooden boat.", "岩畳を眺めて舟で川下り。"],
+      ["chichibu", "mitsumine", "Mitsumine Shrine", "三峯神社", "Mountain shrine guarded by wolves.", "オオカミが守る山の神社。"],
+      ["saitama-city", "railway-museum", "Railway Museum", "鉄道博物館", "Real trains and a driving simulator.", "本物の車両と運転シミュレーター。"],
+      ["saitama-city", "bonsai", "Omiya Bonsai Village", "大宮盆栽村", "Gardens of centuries-old bonsai.", "樹齢数百年の盆栽が並ぶ。"],
+    ],
+  },
+  chiba: {
+    c: [["narita", "Narita", "成田市"], ["choshi", "Choshi", "銚子市"], ["kyonan", "Kyonan", "鋸南町"], ["yachimata", "Yachimata", "八街市"], ["urayasu", "Urayasu", "浦安市"], ["katori", "Katori", "香取市"], ["kamogawa", "Kamogawa", "鴨川市"]],
+    f: [
+      ["narita", "unagi", "Grilled eel on Omotesando", "成田山表参道のうなぎ", "Eel grilled over charcoal on the temple approach.", "参道で炭火焼きのうなぎ。"],
+      ["choshi", "kaisen-don", "Choshi seafood bowl", "銚子の海鮮丼", "Fresh catch from one of Japan's biggest fishing ports.", "日本有数の漁港の海鮮丼。"],
+      ["choshi", "nure-senbei", "Nure-senbei", "ぬれ煎餅", "Soft rice crackers soaked in soy sauce.", "醤油にひたしたしっとり煎餅。"],
+      ["kyonan", "namero", "Namero", "なめろう", "Fisherman's dish of minced fish and miso.", "魚と味噌をたたいた漁師料理。"],
+      ["yachimata", "peanuts", "Chiba peanuts", "千葉の落花生", "Japan's top peanut region.", "日本一の落花生の産地。"],
+    ],
+    a: [
+      ["narita", "shinshoji", "Naritasan Shinsho-ji", "成田山新勝寺", "A grand temple minutes from the airport.", "空港からすぐの大きなお寺。"],
+      ["urayasu", "disney", "Tokyo Disney Resort", "東京ディズニーリゾート", "Two theme parks by Tokyo Bay.", "東京湾のテーマパーク。"],
+      ["kyonan", "nokogiriyama", "Mt. Nokogiri 'Hell Peek'", "鋸山の地獄のぞき", "A rock ledge over a sheer cliff.", "断崖から突き出た岩の上へ。"],
+      ["katori", "sawara", "Sawara canal boat", "佐原の舟めぐり", "Edo-era merchant town by boat.", "江戸の商家町を舟で。"],
+      ["kamogawa", "sea-world", "Kamogawa Sea World", "鴨川シーワールド", "Orca performances by the Pacific.", "太平洋を背にしたシャチのショー。"],
+    ],
+  },
+  tokyo: {
+    c: [["asakusa", "Asakusa (Taito)", "台東区（浅草）"], ["shibuya", "Shibuya", "渋谷区"], ["chuo", "Tsukiji & Tsukishima (Chuo)", "中央区（築地・月島）"], ["shinjuku", "Shinjuku", "新宿区"], ["sumida", "Sumida", "墨田区"], ["chiyoda", "Akihabara (Chiyoda)", "千代田区（秋葉原）"]],
+    f: [
+      ["chuo", "tsukiji-sushi", "Sushi at Tsukiji Outer Market", "築地場外市場のお寿司", "Fresh sushi and street food.", "場外市場で寿司と食べ歩き。"],
+      ["chuo", "monjayaki", "Monjayaki in Tsukishima", "月島もんじゃ", "Cook Tokyo's gooey savory pancake yourself.", "鉄板で自分で焼く下町の味。"],
+      ["asakusa", "ningyo-yaki", "Ningyo-yaki cakes", "人形焼", "Little sponge cakes with red bean, baked on Nakamise.", "仲見世で焼きたてを。"],
+      ["sumida", "chanko", "Chanko nabe in Ryogoku", "両国のちゃんこ鍋", "The sumo wrestlers' hearty hotpot.", "力士の力の源、ちゃんこ鍋。"],
+      ["shinjuku", "omoide-yokocho", "Yakitori at Omoide Yokocho", "思い出横丁の焼き鳥", "Tiny bars in a smoky postwar alley.", "戦後の雰囲気が残る路地の焼き鳥。"],
+    ],
+    a: [
+      ["asakusa", "sensoji", "Senso-ji Temple", "浅草寺", "Tokyo's oldest temple and its giant red lantern.", "雷門の大提灯をくぐる東京最古の寺。"],
+      ["shibuya", "scramble", "Shibuya Scramble Crossing", "渋谷スクランブル交差点", "Cross with thousands of people at once.", "数千人が一斉に渡る交差点。"],
+      ["shibuya", "meiji-jingu", "Meiji Jingu Shrine", "明治神宮", "A forest shrine in the middle of the city.", "都会の真ん中の森の神社。"],
+      ["sumida", "skytree", "Tokyo Skytree", "東京スカイツリー", "Japan's tallest tower, 634 meters.", "高さ634m、日本一高いタワー。"],
+      ["chiyoda", "akihabara", "Akihabara anime & electronics", "秋葉原", "Anime, games and electronics everywhere.", "アニメ・ゲーム・電気街。"],
+    ],
+  },
+  kanagawa: {
+    c: [["yokohama", "Yokohama", "横浜市"], ["kamakura", "Kamakura", "鎌倉市"], ["hakone", "Hakone", "箱根町"], ["miura", "Miura", "三浦市"], ["fujisawa", "Fujisawa", "藤沢市"], ["kawasaki", "Kawasaki", "川崎市"]],
+    f: [
+      ["yokohama", "nikuman", "Chinatown pork buns", "中華街の肉まん", "Steaming buns in Japan's largest Chinatown.", "日本最大の中華街で熱々の肉まん。"],
+      ["yokohama", "iekei", "Iekei ramen", "家系ラーメン", "Pork-and-soy broth born in Yokohama.", "横浜発祥の豚骨醤油ラーメン。"],
+      ["kamakura", "shirasu-don", "Shirasu-don", "しらす丼", "Tiny whitebait over rice.", "湘南のしらすをごはんに。"],
+      ["hakone", "kuro-tamago", "Owakudani black eggs", "大涌谷の黒たまご", "Eggs boiled black in volcanic springs.", "温泉で黒くなったゆで卵。"],
+      ["miura", "maguro", "Misaki tuna", "三崎まぐろ", "Tuna bowls at a historic tuna port.", "まぐろの港で食べるまぐろ丼。"],
+    ],
+    a: [
+      ["yokohama", "cup-noodles", "Cup Noodles Museum", "カップヌードルミュージアム", "Design your own cup noodle.", "自分だけのカップヌードルを作る。"],
+      ["kamakura", "daibutsu", "Great Buddha of Kamakura", "鎌倉大仏", "An 11-meter bronze Buddha in the open air.", "高さ約11mの露座の大仏。"],
+      ["hakone", "lake-ashi", "Lake Ashi & hot springs", "芦ノ湖と箱根の温泉", "Pirate-ship cruise with Mt. Fuji views, then an onsen.", "海賊船で富士山を眺め、温泉へ。"],
+      ["fujisawa", "enoshima", "Enoshima Island", "江の島", "Shrines, caves and sea views on a small island.", "神社と洞窟と海の眺めの島。"],
+      ["kawasaki", "fujiko-museum", "Fujiko F. Fujio Museum", "藤子・F・不二雄ミュージアム", "The world of Doraemon.", "ドラえもんの世界。"],
+    ],
+  },
+};

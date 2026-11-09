@@ -1,0 +1,21 @@
+# 日本制覇スタンプ（Cloudflare Workers）
+# ファイルはすべてリポジトリの一番上に置きます（フォルダは使いません）。
+
+name = "japan-conquest"        # Cloudflare の Worker の名前（好きな名前でOK）
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+# 画面ファイル（app.html）を Worker に組み込む
+[[rules]]
+type = "Text"
+globs = ["**/*.html"]
+fallthrough = true
+
+# データベース（D1）
+[[d1_databases]]
+binding = "DB"                         # コード内で env.DB として使う
+database_name = "japan-conquest-db"
+database_id = "ここにD1のIDを入れる"      # D1 の画面に出ている ID
+
+# ログイン用の秘密の文字列 JWT_SECRET はここには書かず、
+# Worker →「設定」→「変数とシークレット」で「シークレット」として追加します。
